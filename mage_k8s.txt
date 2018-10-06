@@ -1,0 +1,100 @@
+2018/8/23 kubernetes.txt
+file:///C:/Users/Administrator/Desktop/kubernetes.txt 1/11
+使用kubeadm安装部署kubernetes集群：
+前提：
+1、各节点时间同步；
+2、各节点主机名称解析：dns OR hosts；
+3、各节点iptables及firewalld服务被disable；
+一、设置各节点安装程序包
+1、生成yum仓库配置
+先获取docker-ce的配置仓库配置文件：
+# wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O
+/etc/yum.repos.d/
+生成kubernetes的yum仓库配置文件/etc/yum.repos.d/kubernetes.repo，内容如下：
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+gpgcheck=0
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+enabled=1
+2、安装相关的程序包
+# yum install docker-ce kubelet kubeadm kubectl
+二、初始化主节点
+1、配置docker Unit File中的Environment变量，定义其HTTPS_PROXY，或者事先导入所需要的镜像文件；这里采
+用第二种方式：
+# systemctl start docker.service
+# docker load master-component-imgs.gz
+2、编辑kubelet的配置文件/etc/sysconfig/kubelet，设置其忽略Swap启用的状态错误，内容如下：
+KUBELET_EXTRA_ARGS="--fail-swap-on=false"
+KUBE_PROXY_MODE=ipvs
+ip_vs, ip_vs_rr, ip_vs_wrr, ip_vs_sh, nf_conntrack_ipv4
+3、设定docker和kubelet开机自启动：
+# systemctl enable docker kubelet
+4、初始化master节点：
+# kubeadm init --kubernetes-version=v1.11.1 --pod-network-cidr=10.244.0.0/16 service-
+cidr=10.96.0.0/12 --ignore-preflight-errors=Swap
+注意：请记录最后的kubeadm join命令的全部内容。
+5、初始化kubectl
+# mkdir ~/.kube
+# cp /etc/kubernetes/admin.conf ~/.kube/
+测试：
+# kubectl get componentstatus
+# kubectl get nodes
+6、添加flannel网络附件
+# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-
+flannel.yml
+7、验正master节点已经就绪
+# kubectl get nodes
+三、添加节点到集群中（以下前四步在要添加的节点上运行，最后一步在master上运行）
+2018/8/23 kubernetes.txt
+file:///C:/Users/Administrator/Desktop/kubernetes.txt 2/11
+1、配置docker Unit File中的Environment变量，定义其HTTPS_PROXY，或者事先导入所需要的镜像文件；这里采
+用第二种方式，相关文件的获取路径为ftp://172.20.0.1/pub/Sources/7.x86_64/kubernetes/：
+# systemctl start docker.service
+# docker load node-component-imgs.gz
+2、编辑kubelet的配置文件/etc/sysconfig/kubelet，设置其忽略Swap启用的状态错误，内容如下：
+KUBELET_EXTRA_ARGS="--fail-swap-on=false"
+3、设定docker和kubelet开机自启动：
+# systemctl enable docker kubelet
+4、将节点加入第二步中创建的master的集群中，要使用第二步的第4小步记录的kubeadm join命令，而且要额外
+附加“--ignore-preflight-errors=Swap”选项；
+5、待加入完成后，在设置了kubectl的节点上验正节点的就绪状态：
+# kubectl get nodes
+资源配置清单：
+自主式Pod资源
+资源的清单格式：
+一级字段：apiVersion(group/version), kind, metadata(name,namespace,labels,annotations, ...), spec,
+status（只读）
+Pod资源：
+spec.containers <[]object>
+- name <string>
+image <string>
+imagePullPolicy <string>
+Always, Never, IfNotPresent
+修改镜像中的默认应用：
+command, args
+https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
+标签：
+key=value
+key: 字母、数字、_、-、.
+value：可以为空，只能字母或数字开头及结尾，中间可使用
+标签选择器：
+等值关系：=，==，!=
+集合关系：
+KEY in (VALUE1,VALUE2,...)
+KEY notin (VALUE1,VALUE2,...)
+KEY
+!KEY
+许多资源支持内嵌字段定义其使用的标签选择器：
+matchLabels：直接给定键值
+matchExpressions：基于给定的表达式来定义使用标签选择器，{key:"KEY", operator:"OPERATOR",
+values:[VAL1,VAL2,...]}
+操作符：
+In, NotIn：values字段的值必须为非空列表；
+Exists, NotExists：values字段的值必须为空列表；
+nodeSelector <map[string]string>
+节点标签选择器，
+nodeName <string>
+annotations:
+与label不同的地方在于，它不能用于挑选资源对象，仅用于为对象提供“元数据”。
+Pod的生命周期：
