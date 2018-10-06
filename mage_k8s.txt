@@ -1,100 +1,103 @@
 2018/8/23 kubernetes.txt
 file:///C:/Users/Administrator/Desktop/kubernetes.txt 1/11
-Ê¹ÓÃkubeadm°²×°²¿Êğkubernetes¼¯Èº£º
-Ç°Ìá£º
-1¡¢¸÷½ÚµãÊ±¼äÍ¬²½£»
-2¡¢¸÷½ÚµãÖ÷»úÃû³Æ½âÎö£ºdns OR hosts£»
-3¡¢¸÷½Úµãiptables¼°firewalld·şÎñ±»disable£»
-Ò»¡¢ÉèÖÃ¸÷½Úµã°²×°³ÌĞò°ü
-1¡¢Éú³Éyum²Ö¿âÅäÖÃ
-ÏÈ»ñÈ¡docker-ceµÄÅäÖÃ²Ö¿âÅäÖÃÎÄ¼ş£º
+ä½¿ç”¨kubeadmå®‰è£…éƒ¨ç½²kubernetesé›†ç¾¤ï¼š
+å‰æï¼š
+1ã€å„èŠ‚ç‚¹æ—¶é—´åŒæ­¥ï¼›
+2ã€å„èŠ‚ç‚¹ä¸»æœºåç§°è§£æï¼šdns OR hostsï¼›
+3ã€å„èŠ‚ç‚¹iptablesåŠfirewalldæœåŠ¡è¢«disableï¼›
+ä¸€ã€è®¾ç½®å„èŠ‚ç‚¹å®‰è£…ç¨‹åºåŒ…
+1ã€ç”Ÿæˆyumä»“åº“é…ç½®
+å…ˆè·å–docker-ceçš„é…ç½®ä»“åº“é…ç½®æ–‡ä»¶ï¼š
 # wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O
 /etc/yum.repos.d/
-Éú³ÉkubernetesµÄyum²Ö¿âÅäÖÃÎÄ¼ş/etc/yum.repos.d/kubernetes.repo£¬ÄÚÈİÈçÏÂ£º
+ç”Ÿæˆkubernetesçš„yumä»“åº“é…ç½®æ–‡ä»¶/etc/yum.repos.d/kubernetes.repoï¼Œå†…å®¹å¦‚ä¸‹ï¼š
 [kubernetes]
 name=Kubernetes
 baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
 gpgcheck=0
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 enabled=1
-2¡¢°²×°Ïà¹ØµÄ³ÌĞò°ü
+2ã€å®‰è£…ç›¸å…³çš„ç¨‹åºåŒ…
 # yum install docker-ce kubelet kubeadm kubectl
-¶ş¡¢³õÊ¼»¯Ö÷½Úµã
-1¡¢ÅäÖÃdocker Unit FileÖĞµÄEnvironment±äÁ¿£¬¶¨ÒåÆäHTTPS_PROXY£¬»òÕßÊÂÏÈµ¼ÈëËùĞèÒªµÄ¾µÏñÎÄ¼ş£»ÕâÀï²É
-ÓÃµÚ¶şÖÖ·½Ê½£º
+äºŒã€åˆå§‹åŒ–ä¸»èŠ‚ç‚¹
+1ã€é…ç½®docker Unit Fileä¸­çš„Environmentå˜é‡ï¼Œå®šä¹‰å…¶HTTPS_PROXYï¼Œæˆ–è€…äº‹å…ˆå¯¼å…¥æ‰€éœ€è¦çš„é•œåƒæ–‡ä»¶ï¼›è¿™é‡Œé‡‡
+ç”¨ç¬¬äºŒç§æ–¹å¼ï¼š
 # systemctl start docker.service
 # docker load master-component-imgs.gz
-2¡¢±à¼­kubeletµÄÅäÖÃÎÄ¼ş/etc/sysconfig/kubelet£¬ÉèÖÃÆäºöÂÔSwapÆôÓÃµÄ×´Ì¬´íÎó£¬ÄÚÈİÈçÏÂ£º
+2ã€ç¼–è¾‘kubeletçš„é…ç½®æ–‡ä»¶/etc/sysconfig/kubeletï¼Œè®¾ç½®å…¶å¿½ç•¥Swapå¯ç”¨çš„çŠ¶æ€é”™è¯¯ï¼Œå†…å®¹å¦‚ä¸‹ï¼š
 KUBELET_EXTRA_ARGS="--fail-swap-on=false"
 KUBE_PROXY_MODE=ipvs
 ip_vs, ip_vs_rr, ip_vs_wrr, ip_vs_sh, nf_conntrack_ipv4
-3¡¢Éè¶¨dockerºÍkubelet¿ª»ú×ÔÆô¶¯£º
+3ã€è®¾å®šdockerå’Œkubeletå¼€æœºè‡ªå¯åŠ¨ï¼š
 # systemctl enable docker kubelet
-4¡¢³õÊ¼»¯master½Úµã£º
+4ã€åˆå§‹åŒ–masterèŠ‚ç‚¹ï¼š
 # kubeadm init --kubernetes-version=v1.11.1 --pod-network-cidr=10.244.0.0/16 service-
 cidr=10.96.0.0/12 --ignore-preflight-errors=Swap
-×¢Òâ£ºÇë¼ÇÂ¼×îºóµÄkubeadm joinÃüÁîµÄÈ«²¿ÄÚÈİ¡£
-5¡¢³õÊ¼»¯kubectl
+æ³¨æ„ï¼šè¯·è®°å½•æœ€åçš„kubeadm joinå‘½ä»¤çš„å…¨éƒ¨å†…å®¹ã€‚
+5ã€åˆå§‹åŒ–kubectl
 # mkdir ~/.kube
 # cp /etc/kubernetes/admin.conf ~/.kube/
-²âÊÔ£º
+æµ‹è¯•ï¼š
 # kubectl get componentstatus
 # kubectl get nodes
-6¡¢Ìí¼ÓflannelÍøÂç¸½¼ş
+6ã€æ·»åŠ flannelç½‘ç»œé™„ä»¶
 # kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-
 flannel.yml
-7¡¢ÑéÕımaster½ÚµãÒÑ¾­¾ÍĞ÷
+7ã€éªŒæ­£masterèŠ‚ç‚¹å·²ç»å°±ç»ª
 # kubectl get nodes
-Èı¡¢Ìí¼Ó½Úµãµ½¼¯ÈºÖĞ£¨ÒÔÏÂÇ°ËÄ²½ÔÚÒªÌí¼ÓµÄ½ÚµãÉÏÔËĞĞ£¬×îºóÒ»²½ÔÚmasterÉÏÔËĞĞ£©
+ä¸‰ã€æ·»åŠ èŠ‚ç‚¹åˆ°é›†ç¾¤ä¸­ï¼ˆä»¥ä¸‹å‰å››æ­¥åœ¨è¦æ·»åŠ çš„èŠ‚ç‚¹ä¸Šè¿è¡Œï¼Œæœ€åä¸€æ­¥åœ¨masterä¸Šè¿è¡Œï¼‰
 2018/8/23 kubernetes.txt
 file:///C:/Users/Administrator/Desktop/kubernetes.txt 2/11
-1¡¢ÅäÖÃdocker Unit FileÖĞµÄEnvironment±äÁ¿£¬¶¨ÒåÆäHTTPS_PROXY£¬»òÕßÊÂÏÈµ¼ÈëËùĞèÒªµÄ¾µÏñÎÄ¼ş£»ÕâÀï²É
-ÓÃµÚ¶şÖÖ·½Ê½£¬Ïà¹ØÎÄ¼şµÄ»ñÈ¡Â·¾¶Îªftp://172.20.0.1/pub/Sources/7.x86_64/kubernetes/£º
+1ã€é…ç½®docker Unit Fileä¸­çš„Environmentå˜é‡ï¼Œå®šä¹‰å…¶HTTPS_PROXYï¼Œæˆ–è€…äº‹å…ˆå¯¼å…¥æ‰€éœ€è¦çš„é•œåƒæ–‡ä»¶ï¼›è¿™é‡Œé‡‡
+ç”¨ç¬¬äºŒç§æ–¹å¼ï¼Œç›¸å…³æ–‡ä»¶çš„è·å–è·¯å¾„ä¸ºftp://172.20.0.1/pub/Sources/7.x86_64/kubernetes/ï¼š
 # systemctl start docker.service
 # docker load node-component-imgs.gz
-2¡¢±à¼­kubeletµÄÅäÖÃÎÄ¼ş/etc/sysconfig/kubelet£¬ÉèÖÃÆäºöÂÔSwapÆôÓÃµÄ×´Ì¬´íÎó£¬ÄÚÈİÈçÏÂ£º
+2ã€ç¼–è¾‘kubeletçš„é…ç½®æ–‡ä»¶/etc/sysconfig/kubeletï¼Œè®¾ç½®å…¶å¿½ç•¥Swapå¯ç”¨çš„çŠ¶æ€é”™è¯¯ï¼Œå†…å®¹å¦‚ä¸‹ï¼š
 KUBELET_EXTRA_ARGS="--fail-swap-on=false"
-3¡¢Éè¶¨dockerºÍkubelet¿ª»ú×ÔÆô¶¯£º
+3ã€è®¾å®šdockerå’Œkubeletå¼€æœºè‡ªå¯åŠ¨ï¼š
 # systemctl enable docker kubelet
-4¡¢½«½Úµã¼ÓÈëµÚ¶ş²½ÖĞ´´½¨µÄmasterµÄ¼¯ÈºÖĞ£¬ÒªÊ¹ÓÃµÚ¶ş²½µÄµÚ4Ğ¡²½¼ÇÂ¼µÄkubeadm joinÃüÁî£¬¶øÇÒÒª¶îÍâ
-¸½¼Ó¡°--ignore-preflight-errors=Swap¡±Ñ¡Ïî£»
-5¡¢´ı¼ÓÈëÍê³Éºó£¬ÔÚÉèÖÃÁËkubectlµÄ½ÚµãÉÏÑéÕı½ÚµãµÄ¾ÍĞ÷×´Ì¬£º
+4ã€å°†èŠ‚ç‚¹åŠ å…¥ç¬¬äºŒæ­¥ä¸­åˆ›å»ºçš„masterçš„é›†ç¾¤ä¸­ï¼Œè¦ä½¿ç”¨ç¬¬äºŒæ­¥çš„ç¬¬4å°æ­¥è®°å½•çš„kubeadm joinå‘½ä»¤ï¼Œè€Œä¸”è¦é¢å¤–
+é™„åŠ â€œ--ignore-preflight-errors=Swapâ€é€‰é¡¹ï¼›
+5ã€å¾…åŠ å…¥å®Œæˆåï¼Œåœ¨è®¾ç½®äº†kubectlçš„èŠ‚ç‚¹ä¸ŠéªŒæ­£èŠ‚ç‚¹çš„å°±ç»ªçŠ¶æ€ï¼š
 # kubectl get nodes
-×ÊÔ´ÅäÖÃÇåµ¥£º
-×ÔÖ÷Ê½Pod×ÊÔ´
-×ÊÔ´µÄÇåµ¥¸ñÊ½£º
-Ò»¼¶×Ö¶Î£ºapiVersion(group/version), kind, metadata(name,namespace,labels,annotations, ...), spec,
-status£¨Ö»¶Á£©
-Pod×ÊÔ´£º
+============================
+kubectl run nginx-deploy --image=nginx:1.14-alpine --port=80 --replicas=1
+
+èµ„æºé…ç½®æ¸…å•ï¼š
+è‡ªä¸»å¼Podèµ„æº
+èµ„æºçš„æ¸…å•æ ¼å¼ï¼š
+ä¸€çº§å­—æ®µï¼šapiVersion(group/version), kind, metadata(name,namespace,labels,annotations, ...), spec,
+statusï¼ˆåªè¯»ï¼‰
+Podèµ„æºï¼š
 spec.containers <[]object>
 - name <string>
 image <string>
 imagePullPolicy <string>
 Always, Never, IfNotPresent
-ĞŞ¸Ä¾µÏñÖĞµÄÄ¬ÈÏÓ¦ÓÃ£º
+ä¿®æ”¹é•œåƒä¸­çš„é»˜è®¤åº”ç”¨ï¼š
 command, args
 https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
-±êÇ©£º
+æ ‡ç­¾ï¼š
 key=value
-key: ×ÖÄ¸¡¢Êı×Ö¡¢_¡¢-¡¢.
-value£º¿ÉÒÔÎª¿Õ£¬Ö»ÄÜ×ÖÄ¸»òÊı×Ö¿ªÍ·¼°½áÎ²£¬ÖĞ¼ä¿ÉÊ¹ÓÃ
-±êÇ©Ñ¡ÔñÆ÷£º
-µÈÖµ¹ØÏµ£º=£¬==£¬!=
-¼¯ºÏ¹ØÏµ£º
+key: å­—æ¯ã€æ•°å­—ã€_ã€-ã€.
+valueï¼šå¯ä»¥ä¸ºç©ºï¼Œåªèƒ½å­—æ¯æˆ–æ•°å­—å¼€å¤´åŠç»“å°¾ï¼Œä¸­é—´å¯ä½¿ç”¨
+æ ‡ç­¾é€‰æ‹©å™¨ï¼š
+ç­‰å€¼å…³ç³»ï¼š=ï¼Œ==ï¼Œ!=
+é›†åˆå…³ç³»ï¼š
 KEY in (VALUE1,VALUE2,...)
 KEY notin (VALUE1,VALUE2,...)
 KEY
 !KEY
-Ğí¶à×ÊÔ´Ö§³ÖÄÚÇ¶×Ö¶Î¶¨ÒåÆäÊ¹ÓÃµÄ±êÇ©Ñ¡ÔñÆ÷£º
-matchLabels£ºÖ±½Ó¸ø¶¨¼üÖµ
-matchExpressions£º»ùÓÚ¸ø¶¨µÄ±í´ïÊ½À´¶¨ÒåÊ¹ÓÃ±êÇ©Ñ¡ÔñÆ÷£¬{key:"KEY", operator:"OPERATOR",
+è®¸å¤šèµ„æºæ”¯æŒå†…åµŒå­—æ®µå®šä¹‰å…¶ä½¿ç”¨çš„æ ‡ç­¾é€‰æ‹©å™¨ï¼š
+matchLabelsï¼šç›´æ¥ç»™å®šé”®å€¼
+matchExpressionsï¼šåŸºäºç»™å®šçš„è¡¨è¾¾å¼æ¥å®šä¹‰ä½¿ç”¨æ ‡ç­¾é€‰æ‹©å™¨ï¼Œ{key:"KEY", operator:"OPERATOR",
 values:[VAL1,VAL2,...]}
-²Ù×÷·û£º
-In, NotIn£ºvalues×Ö¶ÎµÄÖµ±ØĞëÎª·Ç¿ÕÁĞ±í£»
-Exists, NotExists£ºvalues×Ö¶ÎµÄÖµ±ØĞëÎª¿ÕÁĞ±í£»
+æ“ä½œç¬¦ï¼š
+In, NotInï¼švalueså­—æ®µçš„å€¼å¿…é¡»ä¸ºéç©ºåˆ—è¡¨ï¼›
+Exists, NotExistsï¼švalueså­—æ®µçš„å€¼å¿…é¡»ä¸ºç©ºåˆ—è¡¨ï¼›
 nodeSelector <map[string]string>
-½Úµã±êÇ©Ñ¡ÔñÆ÷£¬
+èŠ‚ç‚¹æ ‡ç­¾é€‰æ‹©å™¨ï¼Œ
 nodeName <string>
 annotations:
-Óëlabel²»Í¬µÄµØ·½ÔÚÓÚ£¬Ëü²»ÄÜÓÃÓÚÌôÑ¡×ÊÔ´¶ÔÏó£¬½öÓÃÓÚÎª¶ÔÏóÌá¹©¡°ÔªÊı¾İ¡±¡£
-PodµÄÉúÃüÖÜÆÚ£º
+ä¸labelä¸åŒçš„åœ°æ–¹åœ¨äºï¼Œå®ƒä¸èƒ½ç”¨äºæŒ‘é€‰èµ„æºå¯¹è±¡ï¼Œä»…ç”¨äºä¸ºå¯¹è±¡æä¾›â€œå…ƒæ•°æ®â€ã€‚
+Podçš„ç”Ÿå‘½å‘¨æœŸï¼š
