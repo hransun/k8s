@@ -41,8 +41,7 @@ cidr=10.96.0.0/12 --ignore-preflight-errors=Swap
 # kubectl get componentstatus
 # kubectl get nodes
 6、添加flannel网络附件
-# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-
-flannel.yml
+# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 7、验正master节点已经就绪
 # kubectl get nodes
 三、添加节点到集群中（以下前四步在要添加的节点上运行，最后一步在master上运行）
