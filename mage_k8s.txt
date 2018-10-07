@@ -100,3 +100,121 @@ nodeName <string>
 annotations:
 与label不同的地方在于，它不能用于挑选资源对象，仅用于为对象提供“元数据”。
 Pod的生命周期：
+2018/8/23 kubernetes.txt
+file:///C:/Users/Administrator/Desktop/kubernetes.txt 3/11
+状态：Pending, Running, Failed, Succeeded, Unknown
+创建Pod:
+Pod生命周期中的重要行为：
+初始化容器
+容器探测：
+liveness
+readiness
+restartPolicy:
+Always, OnFailure, Never. Default to Always.
+探针类型有三种：
+ExecAction、TCPSocketAction、HTTPGetAction
+apiVersion: v1
+kind: Pod
+metadata:
+name: liveness-exec-pod
+namespace: default
+spec:
+containers:
+- name: liveness-exec-container
+image: busybox:latest
+imagePullPolicy: IfNotPresent
+command: ["/bin/sh","-c","touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 3600"]
+livenessProbe:
+exec:
+command: ["test","-e","/tmp/healthy"]
+initialDelaySeconds: 1
+periodSeconds: 3
+apiVersion: v1
+kind: Pod
+metadata:
+name: readiness-httpget-pod
+namespace: default
+spec:
+containers:
+- name: readiness-httpget-container
+image: ikubernetes/myapp:v1
+imagePullPolicy: IfNotPresent
+ports:
+- name: http
+containerPort: 80
+readinessProbe:
+httpGet:
+port: http
+path: /index.html
+initialDelaySeconds: 1
+periodSeconds: 3
+回顾：Pod
+apiVersion, kind, metadata, spec, status（只读）
+spec：
+containers
+nodeSelector
+nodeName
+restartPolicy:
+Always, Never, OnFailure
+containers：
+name
+2018/8/23 kubernetes.txt
+file:///C:/Users/Administrator/Desktop/kubernetes.txt 4/11
+image
+imagePullPolicy：Always、Never、IfNotPresent
+ports：
+name
+containerPort
+livenessProbe
+readinessProbe
+liftcycle
+ExecAction: exec
+TCPSocketAction：tcpSocket
+HTTPGetAction: httpGet
+Pod控制器：
+ReplicationController：
+ReplicaSet：
+Deployment：
+DaemonSet：
+Job：
+Cronjob：
+StatefulSet
+TPR: Third Party Resources, 1.2+, 1.7
+CDR: Custom Defined Resources, 1.8+
+Operator：
+ReplicaSet控制器示例：
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+name: myapp
+namespace: default
+spec:
+replicas: 2
+selector:
+matchLabels:
+app: myapp
+release: canary
+template:
+metadata:
+name: myapp-pod
+labels:
+app: myapp
+release: canary
+environment: qa
+spec:
+containers:
+- name: myapp-container
+image: ikubernetes/myapp:v1
+ports:
+- name: http
+containerPort: 80
+Deployment控制器示例：
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+name: myapp-deploy
+namespace: default
+spec:
+replicas: 3
+selector:
+
