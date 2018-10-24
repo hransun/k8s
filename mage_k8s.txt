@@ -1,5 +1,11 @@
-2018/8/23 kubernetes.txt
-file:///C:/Users/Administrator/Desktop/kubernetes.txt 1/11
+kubeadm reset
+ kubeadm init --kubernetes-version=v1.12.0 --pod-network-cidr=10.244.0.0/16 service-cidr=10.96.0.0/12 --ignore-preflight-errors=Swap --apiserver-advertise-address=172.20.0.70
+ 
+ 
+  kubeadm join 172.20.0.70:6443 --token yht7lb.iesk9vzo1h94n5d8 --discovery-token-ca-cert-hash sha256:b1a7258b657c6f876a181d8dd865199585b982ff61f43262135409262b7db1f8 --ignore-preflight-errors=Swap
+  
+  
+  
 使用kubeadm安装部署kubernetes集群：
 前提：
 1、各节点时间同步；
