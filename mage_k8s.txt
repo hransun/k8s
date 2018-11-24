@@ -6,6 +6,12 @@ kubeadm reset
   
   
   
+  https://github.com/kubernetes/kubeadm/issues/312
+  
+  yum install docker-ce-18.06.1.ce
+  
+  
+  
 使用kubeadm安装部署kubernetes集群：
 前提：
 1、各节点时间同步；
