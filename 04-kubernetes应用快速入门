@@ -1,1 +1,42 @@
+kubectl get nodes
+  142  kubectl describe node node01
+  143  kubectl describe node node02
+  144  kubectl cluster-info
+  145  kubectl run nginx-deploy --image=nginx:1.14-alpine --port=80 --replicas=a
+  146  kubectl run nginx-deploy --image=nginx:1.14-alpine --port=80 --replicas=1
+  147  kubectl get pods
+  148  kubectl get deploy
+  149  kubectl get pods -o wide
+  150  curl 10.244.1.4
+  151  top
+  152  kubectl get pods
+  153  kubectl delete client
+  154  kubectl delete pod client
+  155  dig -t A nginx.default.svc.cluster.local
+  156  kubectl get pods
+  157  kubectl delete  nginx-deploy-86bf78c77-9jhbm
+  158  kubectl delete  pod nginx-deploy-86bf78c77-9jhbm
+  159  kubectl get svc
+  160  kubectl describe svc nginx
+  161  kubectl get pods --show-labels
+  162  kubectl run myapp --image=ikubernetes/myapp:v1 --replicas=2
+  163  kubectl get deployment -w
+  164  kubectl get pods -o wide
+  165  kubectl expose deployment myapp --name=myapp --port=80
+  166  kubectl get svc
+  167  kubectl scale --replicas=5 deployment myapp
+  168  kubectl get pods
+  169  kubectl set image deployment myapp myapp=ikubernetes/myapp:v2
+  170  kubectl rollout status
+  171  kubectl rollout status myapp
+  172  kubectl rollout deployment status myapp
+  173  kubectl rollout status deployment myapp
+  174  kubectl describe pods myapp
+  175  kubectl get pods
+  176  kubectl describe pods myapp-867c8bf765-47wcd
+  177  kubectl rollout undo deployment myapp
+  178  kubectl get pods
+  179  kubectl edit svc myapp
+  180  kubctl get svc
+  181  kubectl get svc
 
